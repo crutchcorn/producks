@@ -1,5 +1,5 @@
 import {useMemo, useState} from "react";
-import {immutableProxifyDeep} from "../utils/immutable-proxify-deep";
+import {immutableProxifyDeep} from "bad-redux";
 
 export const useStoreImplicit = <T extends object>(storeObj: T) => {
     const [_, setR] = useState(true);
@@ -10,8 +10,9 @@ export const useStoreImplicit = <T extends object>(storeObj: T) => {
         immutableProxifyDeep(storeObj, rerender), [storeObj]
     );
 
-
-    return [storeObjMutable, {
+    const storeRef = useMemo(() => ({
         current: storeObj
-    }] as const;
+    }), [storeObj]);
+
+    return [storeObjMutable, storeRef] as const;
 }

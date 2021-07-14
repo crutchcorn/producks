@@ -1,0 +1,22 @@
+{
+  "name": "bad-redux",
+  "version": "0.0.1",
+  "devDependencies": {
+    "@babel/core": "^7.14.6",
+    "@babel/preset-env": "^7.14.7",
+    "@babel/preset-typescript": "^7.14.5",
+    "@types/jest": "^26.0.24",
+    "babel-jest": "^27.0.6",
+    "jest": "^27.0.6",
+    "typescript": "^4.3.5"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "jest"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.[t|j]sx?$": "babel-jest"
+    }
+  }
+}
