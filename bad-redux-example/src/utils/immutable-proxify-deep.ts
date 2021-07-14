@@ -1,12 +1,20 @@
 type SimpleRecord = Record<string | symbol | number, any>;
 
+type ChangeFn = (object: any, name: string | symbol | number, oldVal: any, value: any) => void;
+
 /**
  *
  * @param objToProxy
  * @param originalObj
  * @param getAccObj - Is a function in order to support both `acc[key][name]` and `acc[name]` alike
+ * @param changeFn
  */
-function promisifyAndMutate(objToProxy: SimpleRecord, originalObj: SimpleRecord, getAccObj: () => SimpleRecord) {
+function promisifyAndMutate(
+    objToProxy: SimpleRecord,
+    originalObj: SimpleRecord,
+    getAccObj: () => SimpleRecord,
+    changeFn: ChangeFn
+) {
     return new Proxy(objToProxy, {
         get: function (object, name: string) {
             if (name == '__proxy__') {
@@ -21,6 +29,7 @@ function promisifyAndMutate(objToProxy: SimpleRecord, originalObj: SimpleRecord,
             return object[name];
         },
         set: function (object, name: string, value) {
+            const oldVal = object[name];
             const accObj = getAccObj();
 
             const setterFn = accObj['__mutateState__'] ?? Reflect.set;
@@ -35,7 +44,8 @@ function promisifyAndMutate(objToProxy: SimpleRecord, originalObj: SimpleRecord,
             // Mutate the original object reference, without promisifying (even for objects)
             originalObj[name] = value;
 
-            // TODO: Run change fn
+            // Notify listeners of changes
+            changeFn(object, name, oldVal, value);
 
             // Change worked successfully
             return true;
@@ -43,12 +53,12 @@ function promisifyAndMutate(objToProxy: SimpleRecord, originalObj: SimpleRecord,
     })
 }
 
-export function immutableProxifyDeep<T extends object>(obj: T): T {
+export function immutableProxifyDeep<T extends object>(obj: T, changeFn: ChangeFn = () => {}): T {
     let acc = {} as any;
     for (let [key, val] of Object.entries(obj)) {
         if (typeof val === 'object') {
             const constructedObj = immutableProxifyDeep(val);
-            const proxyObj = promisifyAndMutate(constructedObj, val, () => acc[key]);
+            const proxyObj = promisifyAndMutate(constructedObj, val, () => acc[key], changeFn);
             acc[key] = proxyObj;
             continue;
         }
@@ -56,5 +66,5 @@ export function immutableProxifyDeep<T extends object>(obj: T): T {
         acc[key] = val;
     }
 
-    return promisifyAndMutate(acc, obj, () => acc);
+    return promisifyAndMutate(acc, obj, () => acc, changeFn);
 }

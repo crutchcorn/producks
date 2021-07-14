@@ -54,4 +54,13 @@ describe('Immutable proxify deep', () => {
         expect(proxyObj.num.hello).toBe(1);
         expect(obj.num.hello).toBe(1);
     })
+
+    test('change function should run', () => {
+        const changeFn = jest.fn();
+        const proxyObj = immutableProxifyDeep(obj, changeFn);
+        proxyObj.num = {
+            hello: 9
+        }
+        expect(changeFn).toHaveBeenCalled();
+    })
 })
