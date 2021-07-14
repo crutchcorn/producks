@@ -64,15 +64,21 @@ describe('Immutable proxify deep', () => {
         expect(changeFn).toHaveBeenCalled();
     })
 
-    test('updating original object should update proxy on GET trap call', () => {
-        const changeFn = jest.fn();
-        const proxyObj = immutableProxifyDeep(obj, changeFn);
-        obj.num = {
-            hello: 9
-        }
-        expect(proxyObj.num.hello).toBe(9);
-        // OK, now verify that it's actually proxy trapped
-        proxyObj.num.hello = 100;
-        expect(obj.num.hello).toBe(100);
-    })
+    test("updating original object should update proxy on GET trap call", () => {
+      const changeFn = jest.fn();
+      const proxyObj = immutableProxifyDeep(obj, changeFn);
+      obj.num = {
+        hello: 9,
+      };
+      expect(proxyObj.num.hello).toBe(9);
+      // OK, now verify that it's actually proxy trapped
+      proxyObj.num.hello = 100;
+      expect(obj.num.hello).toBe(100);
+    });
+    
+    test("preserved prototype of array store", () => {
+      const proxyArr = immutableProxifyDeep([1, 2, 3]);
+      
+      expect(proxyArr.map(i => i + 1)).toEqual([2, 3, 4]);
+    });
 })
