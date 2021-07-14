@@ -6,13 +6,11 @@ type ChangeFn = (object: any, name: string | symbol | number, oldVal: any, value
  *
  * @param objToProxy
  * @param originalObj
- * @param getAccObj - Is a function in order to support both `acc[key][name]` and `acc[name]` alike
  * @param changeFn
  */
 function createMutableProxy(
     objToProxy: SimpleRecord,
     originalObj: SimpleRecord,
-    getAccObj: () => SimpleRecord,
     changeFn: ChangeFn
 ) {
     return new Proxy(objToProxy, {
@@ -21,23 +19,21 @@ function createMutableProxy(
             if (name === "__proxy__") {
                 return true;
             }
-            const thisObj = getAccObj();
-            if (thisObj[name] !== originalObj[name]) {
-                const originalValue = originalObj[name];
+            if (object[name] !== originalObj[name]) {
+              const originalValue = originalObj[name];
 
-                const proxyVal = immutableProxifyDeep(originalValue, changeFn);
-                Reflect.set(thisObj, name, proxyVal);
+              const proxyVal = immutableProxifyDeep(originalValue, changeFn);
+              Reflect.set(object, name, proxyVal);
             }
 
             return object[name];
         },
         set: function (object, name: string, value) {
             const oldVal = object[name];
-            const accObj = getAccObj();
 
             // If an property is being mutated/created as an object, we need to proxy it as well
             // proxify the value deeply, assign to `acc[key][name]`
-            Reflect.set(accObj, name, immutableProxifyDeep(value, changeFn));
+            Reflect.set(object, name, immutableProxifyDeep(value, changeFn));
 
             // Mutate the original object reference, without proxifying (even for objects)
             originalObj[name] = value;
@@ -102,5 +98,5 @@ export function immutableProxifyDeep<T extends object>(obj: T, changeFn: ChangeF
     Object.defineProperty(bound, key, descriptor as any);
   }
 
-  return createMutableProxy(bound, obj, () => bound, changeFn);
+  return createMutableProxy(bound, obj, changeFn);
 }
