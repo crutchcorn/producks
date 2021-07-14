@@ -1,14 +1,13 @@
-import {useState} from "react";
-import {store} from './store';
+import {store as storeImport} from './store';
+import {useStoreExplicit} from "./use-store-explicit";
 
 export const DisplayCountExplicit = () => {
-    const [_, setR] = useState(true);
-
-    const rerender = () => setR(b => !b);
+    const [store, mutateStore] = useStoreExplicit(storeImport);
 
     const setCounter = () => {
-        store.counter += 1;
-        rerender();
+        mutateStore((localStore) => {
+            localStore.counter += 1;
+        })
     }
 
     return <div>
