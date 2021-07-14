@@ -17,11 +17,15 @@ function createMutableProxy(
 ) {
     return new Proxy(objToProxy, {
         get: function (object, name: string) {
+            // Added prop to verify we're not promisifying the base object
+            if (name === "__proxy__") {
+                return true;
+            }
             const thisObj = getAccObj();
             if (thisObj[name] !== originalObj[name]) {
                 const originalValue = originalObj[name];
 
-                const proxyVal = immutableProxifyDeep(originalValue);
+                const proxyVal = immutableProxifyDeep(originalValue, changeFn);
                 Reflect.set(thisObj, name, proxyVal);
             }
 
@@ -33,7 +37,7 @@ function createMutableProxy(
 
             // If an property is being mutated/created as an object, we need to proxy it as well
             // proxify the value deeply, assign to `acc[key][name]`
-            Reflect.set(accObj, name, immutableProxifyDeep(value));
+            Reflect.set(accObj, name, immutableProxifyDeep(value, changeFn));
 
             // Mutate the original object reference, without proxifying (even for objects)
             originalObj[name] = value;
@@ -89,9 +93,11 @@ export function immutableProxifyDeep<T extends object>(obj: T, changeFn: ChangeF
       continue;
     }
 
-    // Bind the getters, setters, and values of the original property
-    // - Doesn't use immutableProxifyDeep on the original descriptor to prevent infinite recursion
-    const descriptor = Object.getOwnPropertyDescriptor(obj, key);
+    const descriptor = Object.getOwnPropertyDescriptor(obj, key)!;
+    // Proxify the value
+    if (!descriptor.set && !descriptor.get) {
+        descriptor.value = immutableProxifyDeep(descriptor.value, changeFn);
+    }
     // Add property to bound object
     Object.defineProperty(bound, key, descriptor as any);
   }

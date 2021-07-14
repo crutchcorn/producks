@@ -19,6 +19,8 @@ describe('Immutable proxify deep', () => {
         expect(proxyObj).not.toBe(obj);
         expect(proxyObj.lv1).not.toBe(obj.lv1);
         expect(proxyObj.lv1.lv2).not.toBe(obj.lv1.lv2);
+        expect(obj.lv1["__proxy__"]).toBeUndefined();
+        expect(obj.lv1.lv2["__proxy__"]).toBeUndefined();
         expect(obj.num).toBe(12);
         expect(proxyObj.lv1.lv2.lv3).toBe(1);
     })
@@ -64,6 +66,14 @@ describe('Immutable proxify deep', () => {
         expect(changeFn).toHaveBeenCalled();
     })
 
+    test("change function should run deeply", () => {
+      const changeFn = jest.fn();
+      const proxyObj = immutableProxifyDeep(obj, changeFn);
+      proxyObj.lv1.lv2.lv3 = 999;
+      expect(changeFn).toHaveBeenCalled();
+    });
+
+
     test("updating original object should update proxy on GET trap call", () => {
       const changeFn = jest.fn();
       const proxyObj = immutableProxifyDeep(obj, changeFn);
@@ -80,5 +90,22 @@ describe('Immutable proxify deep', () => {
       const proxyArr = immutableProxifyDeep([1, 2, 3]);
       
       expect(proxyArr.map(i => i + 1)).toEqual([2, 3, 4]);
+    });
+
+    test("Store should handle getters and setters", () => {
+        const proxyObj = immutableProxifyDeep({
+            _hello: "test",
+            get hello() {
+                return this._hello;
+            },
+            set hello(val: string) {
+                this._hello = val;
+            }
+        })
+
+        expect(proxyObj.hello).toBe("test");
+        proxyObj.hello = "world";
+        expect(proxyObj.hello).toBe("world");
+        expect(proxyObj._hello).toBe("world");
     });
 })
