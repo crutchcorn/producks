@@ -17,26 +17,15 @@ function promisifyAndMutate(
 ) {
     return new Proxy(objToProxy, {
         get: function (object, name: string) {
-            if (name == '__proxy__') {
-                return true;
-            }
-            // Add a hidden method used to mutate object, therefore bypassing the "set" trap
-            if (name == '__mutateState__') {
-                return (_: never, key: string, value: any) => {
-                    object[key] = value
-                }
-            }
-
             const thisObj = getAccObj();
-            const setterFn = thisObj['__mutateState__'] ?? Reflect.set;
             if (thisObj[name] !== originalObj[name]) {
                 const originalValue = originalObj[name];
 
                 if (originalValue && typeof originalValue == 'object') {
                     const proxyVal = immutableProxifyDeep(originalValue);
-                    setterFn(thisObj, name, proxyVal);
+                    Reflect.set(thisObj, name, proxyVal);
                 } else {
-                    setterFn(thisObj, name, originalValue);
+                    Reflect.set(thisObj, name, originalValue);
                 }
             }
 
@@ -46,13 +35,11 @@ function promisifyAndMutate(
             const oldVal = object[name];
             const accObj = getAccObj();
 
-            const setterFn = accObj['__mutateState__'] ?? Reflect.set;
-
             if (value && typeof value == 'object') {
                 // Promisify the value deeply, assign to `acc[key][name]`
-                setterFn(accObj, name, immutableProxifyDeep(value));
+                Reflect.set(accObj, name, immutableProxifyDeep(value));
             } else {
-                setterFn(accObj, name, value);
+                Reflect.set(accObj, name, value);
             }
 
             // Mutate the original object reference, without promisifying (even for objects)

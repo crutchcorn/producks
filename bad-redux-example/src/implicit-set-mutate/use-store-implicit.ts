@@ -6,7 +6,12 @@ export const useStoreImplicit = <T extends object>(storeObj: T) => {
 
     const rerender = () => setR(b => !b);
 
-    const storeObjMutable = useMemo(() => immutableProxifyDeep(storeObj, rerender), [storeObj]);
+    const storeObjMutable = useMemo(() =>
+        immutableProxifyDeep(storeObj, rerender), [storeObj]
+    );
 
-    return [storeObjMutable] as const;
+
+    return [storeObjMutable, {
+        current: storeObj
+    }] as const;
 }
