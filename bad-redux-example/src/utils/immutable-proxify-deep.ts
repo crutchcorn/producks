@@ -26,6 +26,20 @@ function promisifyAndMutate(
                     object[key] = value
                 }
             }
+
+            const thisObj = getAccObj();
+            const setterFn = thisObj['__mutateState__'] ?? Reflect.set;
+            if (thisObj[name] !== originalObj[name]) {
+                const originalValue = originalObj[name];
+
+                if (originalValue && typeof originalValue == 'object') {
+                    const proxyVal = immutableProxifyDeep(originalValue);
+                    setterFn(thisObj, name, proxyVal);
+                } else {
+                    setterFn(thisObj, name, originalValue);
+                }
+            }
+
             return object[name];
         },
         set: function (object, name: string, value) {
@@ -36,9 +50,9 @@ function promisifyAndMutate(
 
             if (value && typeof value == 'object') {
                 // Promisify the value deeply, assign to `acc[key][name]`
-                setterFn(getAccObj(), name, immutableProxifyDeep(value));
+                setterFn(accObj, name, immutableProxifyDeep(value));
             } else {
-                setterFn(getAccObj(), name, value);
+                setterFn(accObj, name, value);
             }
 
             // Mutate the original object reference, without promisifying (even for objects)
