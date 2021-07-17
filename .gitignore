@@ -24,5 +24,6 @@ yarn-error.log*
 .idea/
 
 # JS files
+packages/store/index.js
 packages/store/src/**/*.js
 packages/store/src/**/*.map
