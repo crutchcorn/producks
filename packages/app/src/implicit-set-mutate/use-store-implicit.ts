@@ -1,5 +1,5 @@
 import {useMemo, useReducer} from "react";
-import {immutableProxifyDeep} from "bad-redux";
+import {immutableProxifyDeep} from "bgs";
 
 export const useStoreImplicit = <T extends object>(storeObj: T) => {
     const [_, rerender] = useReducer(s => !s, true);

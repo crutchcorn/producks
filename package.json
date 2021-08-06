@@ -1,15 +1,16 @@
 {
   "name": "root",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
   "scripts": {
-    "start": "yarn workspace bad-redux-demo run start",
-    "build": "yarn workspace bad-redux run build",
-    "test": "yarn workspace bad-redux run test"
+    "start": "yarn workspace bgs-demo run start",
+    "build": "yarn workspace bgs run build",
+    "test": "yarn workspace bgs run test",
+    "bootstrap": "lerna bootstrap"
   },
   "devDependencies": {
     "lerna": "^3.22.1"
-  }
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }
