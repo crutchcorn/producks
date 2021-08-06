@@ -5,7 +5,8 @@
     "start": "yarn workspace bgs-demo run start",
     "build": "yarn workspace bgs run build",
     "test": "yarn workspace bgs run test",
-    "bootstrap": "lerna bootstrap"
+    "bootstrap": "lerna bootstrap",
+    "npmpublish": "lerna publish"
   },
   "devDependencies": {
     "lerna": "^3.22.1"
