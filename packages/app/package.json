@@ -1,6 +1,6 @@
 {
   "name": "bgs-demo",
-  "version": "0.1.0",
+  "version": "0.0.1-alpha.0",
   "private": true,
   "dependencies": {
     "react": "^17.0.2",
@@ -9,11 +9,11 @@
   },
   "devDependencies": {
     "@craco/craco": "^6.2.0",
-    "typescript": "^4.3.5",
+    "@types/jest": "^26.0.24",
     "@types/node": "^16.3.2",
     "@types/react": "^17.0.14",
     "@types/react-dom": "^17.0.9",
-    "@types/jest": "^26.0.24"
+    "typescript": "^4.3.5"
   },
   "scripts": {
     "start": "craco start",
