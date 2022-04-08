@@ -1,16 +1,12 @@
 import {useMemo, useReducer} from "react";
-import {immutableProxifyDeep} from "bgs";
+import {Atom} from "bgs";
 
-export const useStoreImplicit = <T extends object>(storeObj: T) => {
+export const useStoreImplicit = <T extends object>(storeObj: T & Atom<T>) => {
     const [_, rerender] = useReducer(s => !s, true);
 
-    const storeObjMutable = useMemo(() =>
-        immutableProxifyDeep(storeObj, rerender), [storeObj]
-    );
+    storeObj.__changeFnSetter__ = rerender;
 
-    const storeRef = useMemo(() => ({
-        current: storeObj
-    }), [storeObj]);
+    const storeRef = useMemo(() => ({current: storeObj.__object__}), [storeObj]);
 
-    return [storeObjMutable, storeRef] as const;
+    return [storeObj, storeRef] as const;
 }

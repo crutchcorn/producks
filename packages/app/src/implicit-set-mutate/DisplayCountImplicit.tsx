@@ -6,11 +6,15 @@ export const DisplayCountImplicit = () => {
 
     const setCounter = () => {
         store.counter += 1;
+    }
+
+    const setCounterRef = () => {
         storeRef.current.counter += 1;
     }
 
     return <div>
         <button onClick={setCounter}>Add</button>
+        <button onClick={setCounterRef}>Add Ref</button>
         <p>{store.counter}</p>
     </div>
 }

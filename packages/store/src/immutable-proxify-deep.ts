@@ -3,7 +3,12 @@ type SimpleRecord = Record<string | symbol | number, any>;
 type ChangeFn = (object: any, name: string | symbol | number, oldVal: any, value: any) => void;
 
 /**
+ * Given an object and an original object, mutate them deeply and run the `changeFn` when anything is `set`
  *
+ * This proxy allows for three special keys to be set/got:
+ * - `__proxy__`: A `true` to tell you that it is a proxy object.
+ * - `__changeFnSetter__`: A function setter that is untouched when set in order to allow for atomic usage of changeFn.
+ * - `__object__`: The original object that you can mutate without triggering `changeFn`
  * @param objToProxy
  * @param originalObj
  * @param changeFn
@@ -19,6 +24,9 @@ function createMutableProxy(
             if (name === "__proxy__") {
                 return true;
             }
+            if (name === "__object__") {
+                return originalObj;
+            }
             if (object[name] !== originalObj[name]) {
               const originalValue = originalObj[name];
 
@@ -29,6 +37,10 @@ function createMutableProxy(
             return object[name];
         },
         set: function (object, name: string, value) {
+            if (name === "__changeFnSetter__") {
+                originalObj[name] = value;
+                return true;
+            }
             const oldVal = object[name];
 
             // If an property is being mutated/created as an object, we need to proxy it as well
@@ -47,6 +59,11 @@ function createMutableProxy(
     })
 }
 
+/**
+ * Wrapper logic to handle arrays, objects, and primitives
+ * @param obj
+ * @param changeFn
+ */
 export function immutableProxifyDeep<T extends object>(obj: T, changeFn: ChangeFn = () => {}): T {
   if (!(obj instanceof Object) || obj instanceof Function) {
     return obj;
@@ -99,4 +116,18 @@ export function immutableProxifyDeep<T extends object>(obj: T, changeFn: ChangeF
   }
 
   return createMutableProxy(bound, obj, changeFn);
+}
+
+export interface Atom<T = any> {
+    __changeFnSetter__: (...args: any[]) => void
+    __object__: T
+}
+
+export function createAtom<T extends object>(obj: T): T & Atom<T> {
+    function changeFn(this: Atom<T>, ...args: any[]) {
+        if (this.__changeFnSetter__) {
+            this.__changeFnSetter__(...args);
+        }
+    }
+  return immutableProxifyDeep(obj, changeFn.bind(obj as never)) as never;
 }
