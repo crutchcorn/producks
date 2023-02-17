@@ -1,5 +1,5 @@
 # Publishing
 
 ```shell
-pnpm run publish -r
+pnpm run publish -r --access=public
 ```
