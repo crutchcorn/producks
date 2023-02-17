@@ -1,1 +1,1 @@
-export * from './immutable-proxify-deep';
+export * from './create-atom';
