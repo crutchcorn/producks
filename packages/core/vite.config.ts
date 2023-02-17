@@ -7,9 +7,9 @@ export default defineConfig({
     build: {
         lib: {
             entry: {
-                'bgs': path.resolve(__dirname, "src/index.ts"),
+                'producks-core': path.resolve(__dirname, "src/index.ts"),
             },
-            name: "BGS",
+            name: "ProducksCore",
             fileName: (format, entryName) => `${entryName}-${format}.js`,
             formats: ["es", "cjs"],
         },

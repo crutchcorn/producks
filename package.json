@@ -1,5 +1,5 @@
 {
-  "name": "root",
+  "name": "@producks/root",
   "private": true,
   "scripts": {
     "dev": "turbo run dev",
@@ -7,7 +7,7 @@
     "test": "turbo run test -- --watch=false"
   },
   "devDependencies": {
-    "turbo": "^1.5.6"
+    "turbo": "^1.7.4"
   },
   "workspaces": {
     "packages": [

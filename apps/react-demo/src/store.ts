@@ -1,4 +1,4 @@
-import {createAtom} from "bgs";
+import {createAtom} from "@producks/core";
 
 export const store = createAtom({
     counter: 0,

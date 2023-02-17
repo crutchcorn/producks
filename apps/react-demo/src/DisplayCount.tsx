@@ -1,6 +1,5 @@
 import {store} from './store';
-import {useAtomSelector} from "./use-selector";
-import {useAtomMeta} from "./use-atom-meta";
+import {useAtomSelector, useAtomMeta} from "@producks/react";
 
 export const DisplayCount = () => {
     const count = useAtomSelector(store, (store) => store.counter);

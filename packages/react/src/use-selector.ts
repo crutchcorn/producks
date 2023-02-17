@@ -1,5 +1,5 @@
 import {useReducer, useRef} from "react";
-import {Atom} from "bgs";
+import {Atom} from "@producks/core";
 
 export const useAtomSelector = <T extends object, R>(storeObj: T & Atom<T>, selector: (store: T) => R) => {
     const [_, rerender] = useReducer(() => ({}), {});
