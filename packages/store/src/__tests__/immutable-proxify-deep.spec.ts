@@ -1,3 +1,7 @@
+import { beforeEach, describe,
+    test,
+    expect, vi, } from "vitest";
+
 import {immutableProxifyDeep} from "../immutable-proxify-deep";
 
 let obj = {} as any;
@@ -58,7 +62,7 @@ describe('Immutable proxify deep', () => {
     })
 
     test('change function should run', () => {
-        const changeFn = jest.fn();
+        const changeFn = vi.fn();
         const proxyObj = immutableProxifyDeep(obj, changeFn);
         proxyObj.num = {
             hello: 9
@@ -67,7 +71,7 @@ describe('Immutable proxify deep', () => {
     })
 
     test("change function should run deeply", () => {
-      const changeFn = jest.fn();
+      const changeFn = vi.fn();
       const proxyObj = immutableProxifyDeep(obj, changeFn);
       proxyObj.lv1.lv2.lv3 = 999;
       expect(changeFn).toHaveBeenCalled();
@@ -75,7 +79,7 @@ describe('Immutable proxify deep', () => {
 
 
     test("updating original object should update proxy on GET trap call", () => {
-      const changeFn = jest.fn();
+      const changeFn = vi.fn();
       const proxyObj = immutableProxifyDeep(obj, changeFn);
       obj.num = {
         hello: 9,
@@ -85,10 +89,10 @@ describe('Immutable proxify deep', () => {
       proxyObj.num.hello = 100;
       expect(obj.num.hello).toBe(100);
     });
-    
+
     test("preserved prototype of array store", () => {
       const proxyArr = immutableProxifyDeep([1, 2, 3]);
-      
+
       expect(proxyArr.map(i => i + 1)).toEqual([2, 3, 4]);
     });
 

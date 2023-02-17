@@ -2,9 +2,9 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "dev": "yarn workspace bgs-demo run dev",
-    "build": "yarn workspace bgs run build",
-    "test": "yarn workspace bgs run test"
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test -- --watch=false"
   },
   "devDependencies": {
     "turbo": "^1.5.6"
