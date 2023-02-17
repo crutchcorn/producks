@@ -2,17 +2,18 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "start": "yarn workspace bgs-demo run start",
+    "dev": "yarn workspace bgs-demo run dev",
     "build": "yarn workspace bgs run build",
-    "test": "yarn workspace bgs run test",
-    "bootstrap": "lerna bootstrap",
-    "npmpublish": "lerna publish"
+    "test": "yarn workspace bgs run test"
   },
   "devDependencies": {
-    "lerna": "^3.22.1"
+    "turbo": "^1.5.6"
   },
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "packages/*"
+    ]
+  },
   "packageManager": "yarn@3.4.1"
 }
