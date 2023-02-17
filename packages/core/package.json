@@ -1,6 +1,14 @@
 {
   "name": "@producks/core",
+  "description": "A framework agnostic atom-based global storage reactivity system",
   "version": "0.0.1-alpha.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/crutchcorn/producks.git",
+    "directory": "packages/core"
+  },
+  "bugs": "https://github.com/crutchcorn/producks/issues",
+  "homepage": "https://github.com/crutchcorn/producks",
   "scripts": {
     "dev": "vite build --watch",
     "build": "vite build",
