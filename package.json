@@ -9,11 +9,5 @@
   "devDependencies": {
     "turbo": "^1.7.4"
   },
-  "workspaces": {
-    "packages": [
-      "apps/*",
-      "packages/*"
-    ]
-  },
-  "packageManager": "yarn@3.4.1"
+  "packageManager": "^pnpm@7.14.0"
 }

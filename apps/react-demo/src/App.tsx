@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {DisplayCount} from "./implicit-set-mutate/DisplayCount";
+import {DisplayCount} from "./DisplayCount";
 
 function App() {
     return (

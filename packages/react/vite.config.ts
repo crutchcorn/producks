@@ -4,7 +4,9 @@ import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 
 export default defineConfig({
-    plugins: [react(), dts()],
+    plugins: [react(), dts({
+        entryRoot: path.resolve(__dirname, "src")
+    })],
     build: {
         lib: {
             entry: {
