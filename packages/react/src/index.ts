@@ -1,2 +1,2 @@
-export * from './use-atom-meta';
-export * from './use-selector';
+export * from './atom-hooks/use-atom-meta';
+export * from './atom-hooks/use-selector';

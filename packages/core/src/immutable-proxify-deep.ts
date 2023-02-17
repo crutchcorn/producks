@@ -7,7 +7,7 @@ type ChangeFn = (object: any, name: string | symbol | number, oldVal: any, value
  *
  * This proxy allows for three special keys to be set/got:
  * - `__proxy__`: A `true` to tell you that it is a proxy object.
- * - `__changeFnSetter__`: A function setter that is untouched when set in order to allow for atomic usage of changeFn.
+ * - `__changeFnSetters__`: A collection of function setter that is untouched when set in order to allow for atomic usage of changeFn.
  * - `__object__`: The original object that you can mutate without triggering `changeFn`
  * @param objToProxy
  * @param originalObj
@@ -37,7 +37,7 @@ function createMutableProxy(
             return object[name];
         },
         set: function (object, name: string, value) {
-            if (name === "__changeFnSetter__") {
+            if (name === "__changeFnSetters__") {
                 originalObj[name] = value;
                 return true;
             }
@@ -119,14 +119,14 @@ export function immutableProxifyDeep<T extends object>(obj: T, changeFn: ChangeF
 }
 
 export interface Atom<T = any> {
-    __changeFnSetter__: (...args: any[]) => void
+    __changeFnSetters__: Array<(...args: any[]) => void>
     __object__: T
 }
 
 export function createAtom<T extends object>(obj: T): T & Atom<T> {
     function changeFn(this: Atom<T>, ...args: any[]) {
-        if (this.__changeFnSetter__) {
-            this.__changeFnSetter__(...args);
+        if (this.__changeFnSetters__) {
+            this.__changeFnSetters__.forEach(fn => fn(...args));
         }
     }
   return immutableProxifyDeep(obj, changeFn.bind(obj as never)) as never;

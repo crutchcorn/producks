@@ -5,8 +5,7 @@ import {
 } from "vitest";
 import {fireEvent, render} from "@testing-library/react";
 import {createAtom} from "@producks/core";
-import {useAtomMeta} from "./use-atom-meta";
-import {useAtomSelector} from "./use-selector";
+import {useAtomMeta, useAtomSelector} from "./index";
 
 describe('Use selector meta', () => {
     test('Should not re-render when non-selected data changes', () => {
@@ -73,6 +72,43 @@ describe('Use selector meta', () => {
 
         expect(compRender).toBeCalledTimes(2);
         expect(getByText("2")).toBeInTheDocument();
+    });
+
+    test('Should re-render multiple keys', () => {
+        const atom = createAtom({
+            count: 1,
+            otherCount: 2
+        })
+
+        const Comp = () => {
+            const count = useAtomSelector(atom, state => state.count);
+            const otherCount = useAtomSelector(atom, state => state.otherCount);
+
+            const addCount = () => {
+                atom.count += 1;
+            }
+
+            const addOther = () => {
+                atom.otherCount += 1;
+            }
+
+            return <>
+                <button onClick={addCount}>AddCount</button>
+                <button onClick={addOther}>AddOther</button>
+                <p>Count: {count}</p>
+                <p>Other: {otherCount}</p>
+            </>
+        }
+        const {getByText} = render(<Comp/>)
+
+        expect(getByText("Count: 1")).toBeInTheDocument();
+        expect(getByText("Other: 2")).toBeInTheDocument();
+
+        fireEvent.click(getByText("AddCount"));
+        expect(getByText("Count: 2")).toBeInTheDocument();
+
+        fireEvent.click(getByText("AddOther"));
+        expect(getByText("Other: 3")).toBeInTheDocument();
     });
 });
 
