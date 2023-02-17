@@ -2,7 +2,7 @@ import { beforeEach, describe,
     test,
     expect, vi, } from "vitest";
 
-import {immutableProxifyDeep} from "../immutable-proxify-deep";
+import {immutableProxifyDeep} from "./immutable-proxify-deep";
 
 let obj = {} as any;
 
