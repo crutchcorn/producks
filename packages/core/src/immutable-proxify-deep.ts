@@ -39,6 +39,7 @@ function createMutableProxy(
         set: function (object, name: string, value) {
             if (name === "__changeFnSetters__") {
                 originalObj[name] = value;
+                if (originalObj["__onChangeFnSettersChange__"]) originalObj["__onChangeFnSettersChange__"].forEach(fn => fn(value));
                 return true;
             }
             const oldVal = object[name];

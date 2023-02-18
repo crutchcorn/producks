@@ -27,15 +27,11 @@ describe('Merge atoms', () => {
             users: userAtom
         })
 
-        console.log("1")
         const changeFn = vi.fn();
-        console.log("2")
         userAtom.__changeFnSetters__ = [changeFn];
 
-        console.log("3")
         mergedAtom.users.users = [1, 2, 3];
 
-        console.log("4")
         expect(changeFn).toHaveBeenCalled();
     })
 })
