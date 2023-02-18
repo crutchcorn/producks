@@ -112,4 +112,12 @@ describe('Immutable proxify deep', () => {
         expect(proxyObj.hello).toBe("world");
         expect(proxyObj._hello).toBe("world");
     });
+
+    test("immutableProxifyDeep should be deep", () => {
+        const proxyObj = immutableProxifyDeep(immutableProxifyDeep({
+            hello: "test",
+        }));
+
+        expect(proxyObj.hello).toBe("test");
+    });
 })

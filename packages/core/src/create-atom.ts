@@ -8,6 +8,7 @@ export interface Atom<T = any> {
 export function createAtom<T extends object>(obj: T): T & Atom<T> {
     function changeFn(this: Atom<T>, ...args: any[]) {
         if (this.__changeFnSetters__) {
+            console.log({t: this});
             this.__changeFnSetters__.forEach(fn => fn(...args));
         }
     }
