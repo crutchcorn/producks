@@ -13,6 +13,7 @@ export const mergeAtoms = <R extends Record<string, Atom>>(atomRecord: R):
     const mergedAtom = createAtom(accObject);
 
     for (let [atomName, atom] of Object.entries(atomRecord)) {
+        // TODO: Make this a WeakMap so we can cleanup automatically on GC
         atom.__onChangeFnSettersChange__ = atom.__onChangeFnSettersChange__ ?? [];
         atom.__onChangeFnSettersChange__.push(() => {
             mergedAtom.__changeFnSetters__ = Object.values(atomRecord).reduce((prev, atom) => {

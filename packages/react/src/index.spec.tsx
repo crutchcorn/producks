@@ -4,7 +4,7 @@ import {
     expect, vi
 } from "vitest";
 import {fireEvent, render} from "@testing-library/react";
-import {createAtom} from "@producks/core";
+import {createAtom, mergeAtoms} from "@producks/core";
 import {useAtomMeta, useAtomSelector} from "./index";
 
 describe('Use selector meta', () => {
@@ -109,6 +109,49 @@ describe('Use selector meta', () => {
 
         fireEvent.click(getByText("AddOther"));
         expect(getByText("Other: 3")).toBeInTheDocument();
+    });
+
+
+    test('Should render with merged atoms', () => {
+        const atom = mergeAtoms({
+            counterData: createAtom({
+                           count: 1,
+                           otherCount: 2
+                       }),
+            otherData: createAtom({
+                name: "Corbin"
+            })
+        })
+
+        const Comp = () => {
+            const count = useAtomSelector(atom, state => state.counterData.count);
+            const name = useAtomSelector(atom, state => state.otherData.name);
+
+            const addCount = () => {
+                atom.counterData.count += 1;
+            }
+
+            const changeName = () => {
+                atom.otherData.name = "Chad"
+            }
+
+            return <>
+                <button onClick={changeName}>ChangeName</button>
+                <button onClick={addCount}>AddCount</button>
+                <p>Name: {name}</p>
+                <p>Count: {count}</p>
+            </>
+        }
+        const {getByText} = render(<Comp/>)
+
+        expect(getByText("Count: 1")).toBeInTheDocument();
+        expect(getByText("Name: Corbin")).toBeInTheDocument();
+
+        fireEvent.click(getByText("AddCount"));
+        expect(getByText("Count: 2")).toBeInTheDocument();
+
+        fireEvent.click(getByText("ChangeName"));
+        expect(getByText("Name: Chad")).toBeInTheDocument();
     });
 });
 
