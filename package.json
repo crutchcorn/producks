@@ -1,13 +1,18 @@
 {
   "name": "@producks/root",
   "private": true,
+  "description": "A framework agnostic atom-based global storage reactivity system",
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
-    "test": "turbo run test -- --watch=false"
+    "test": "turbo run test -- --watch=false",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
-    "turbo": "^1.7.4"
+    "turbo": "^1.7.4",
+    "vitepress": "^1.0.0-beta.1"
   },
   "packageManager": "^pnpm@7.14.0"
 }

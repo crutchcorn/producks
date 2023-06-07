@@ -1,0 +1,54 @@
+:root {
+    --vp-c-brand: #F56600;
+    --vp-c-brand-dark: #c15100;
+    --vp-c-brand-darker: #7f3600;
+}
+
+html.dark {
+    --vp-c-brand: #FF953C;
+    --vp-c-brand-dark: #ea7421;
+    --vp-c-brand-darker: #F56600;
+    --vp-button-brand-text: var(--vp-c-bg);
+    --vp-button-brand-hover-text: var(--vp-c-bg-elv);
+    --vp-button-brand-active-text: var(--vp-c-bg-elv-down);
+}
+
+:root {
+    --vp-home-hero-name-color: transparent;
+    --vp-home-hero-name-background: -webkit-linear-gradient(
+            120deg,
+            #FF953C 30%,
+            #F56600
+    );
+    --vp-home-hero-image-background-image: linear-gradient(
+            -45deg,
+            #FFF7DA 30%,
+            #f3b900
+    );
+    --vp-home-hero-image-filter: blur(30px);
+}
+
+.dark {
+    --vp-home-hero-name-background: -webkit-linear-gradient(
+            120deg,
+            #FF953C 30%,
+            #F56600
+    );
+    --vp-home-hero-image-background-image: linear-gradient(
+            -45deg,
+            #9b4602 30%,
+            #803700
+    );
+}
+
+@media (min-width: 640px) {
+    :root {
+        --vp-home-hero-image-filter: blur(56px);
+    }
+}
+
+@media (min-width: 960px) {
+    :root {
+        --vp-home-hero-image-filter: blur(72px);
+    }
+}
